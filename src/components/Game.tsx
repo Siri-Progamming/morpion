@@ -3,41 +3,49 @@ import {useEffect, useState} from 'react'
 
 function Game() {
     const symbols = ['X', 'O']
-    const initGame = () => {
+
+    function initialize(){
+        setGameState(initGame())
+        setWinner(null)
+    }
+
+     const initGame = () => {
         console.log('initGame')
         return {
             // Choisir si le premier est X ou O
-            symbol: symbols[Math.floor(Math.random() * symbols.length)],
+            playingSymbol: symbols[Math.floor(Math.random() * symbols.length)],
             // Vider les cases
-            initialValue: '',
-            isFirst: true
+            initialValue: ''
         }
     }
     const [gameState, setGameState] = useState(() => initGame())
+    const [winner, setWinner] = useState<string | null>(null)
 
     useEffect(() => {
         // setGameState(initGame())
         console.log('Game Mounted')
-        console.log('isFirst : ', gameState.isFirst)
+        if(winner != null) {
+            alert('Le gagnant est : ' + winner.toString())
+            initialize()
+        }
         return () => {
             console.log('Game Unmounted')
         }
-    }, [])
+    }, [winner])
 
     const handleBoardUpdate = (e) => {
         console.log('HandlingBoardUpdate')
-        console.log('isFirst ? : '+gameState.isFirst)
-        setGameState({
-            symbol: e.symbol,
-            initialValue: '',
-            isFirst: false
-        })
-        console.log('isFirst ? : '+gameState.isFirst)
+        setWinner(e.winner)
     }
 
     return (
-        <Board symbol={gameState.symbol} initialValue={gameState.initialValue} isFirst={gameState.isFirst}
-                onBoardUpdate={handleBoardUpdate}/>
+        <>
+            <h1 className={`font-bold text-center mb-10 mt-0
+            `}>TIC TAC TOE</h1>
+            <Board playingSymbol={gameState.playingSymbol}
+                   initialValue={gameState.initialValue}
+                   onBoardUpdate={handleBoardUpdate}/>
+        </>
     )
 }
 

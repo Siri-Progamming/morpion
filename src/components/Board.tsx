@@ -3,34 +3,69 @@ import {useEffect, useState} from "react";
 
 function Board(props) {
     const {onBoardUpdate} = props
-    const symbol = props.symbol
+    const [playingSymbol, setPlayingSymbol] = useState(props.playingSymbol)
     const initialValue = props.initialValue
-    const isFirst = props.isFirst
 
-    useEffect(() => {
-        console.log('Premier à commencer : ', symbol)
-    }, [])
+    const [squares, setSquares] = useState(Array(9).fill(initialValue))
 
     const generateSquares = () => {
-        const squares = []
-        for (let i = 0; i < 9; i++) {
-            squares.push(<Square key={i} initialValue={initialValue} symbol={symbol} isFirst={isFirst} onClickOnSquare={handleClickOnSquare}/>)
+        return squares.map((value, index) => (
+            <Square
+                key={index}
+                id={index}
+                initialValue={initialValue}
+                playingSymbol={playingSymbol}
+                onClickOnSquare={handleClickOnSquare}
+            />))
         }
-        return squares
-    }
+
+    useEffect(() => {
+        console.log('Premier à commencer : ', playingSymbol)
+        setSquares(squares)
+    }, [])
 
     const handleClickOnSquare = (e) => {
-        onBoardUpdate({symbol: e.symbol, isFirst: false})
+        // On met à jour les squares
+        squares[e.id] = e.playedSymbol
+        // On check s'il y a un gagnant
+        if(checkWinner(squares) != null){
+            onBoardUpdate({winner: checkWinner(squares)})
+        }
+        //On met à jour le symbole qui doit jouer
+        setPlayingSymbol(e.playingSymbol)
+    }
+
+    function checkWinner(squares) {
+        console.log('Checking for winner')
+        const winningCombinations = [
+                    [0, 1, 2],
+                    [3, 4, 5],
+                    [6, 7, 8], // lignes
+                    [0, 3, 6],
+                    [1, 4, 7],
+                    [2, 5, 8], // colonnes
+                    [0, 4, 8],
+                    [2, 4, 6] // diagonales
+                ]
+
+        for (let i = 0; i < winningCombinations.length; i++) {
+            const [a, b, c] = winningCombinations[i]
+                console.log('squares[a] : ', squares[a])
+                if (squares[a] === squares[b] && squares[a] === squares[c] && squares[a] !== '') {
+                    console.log('Le gagnant est : ', squares[a])
+                    return squares[a]
+                }
+        }
+        return null
     }
 
     return (
         <>
             <div className="grid grid-cols-3
-                            border-4 border-black"
+                            gap-0"
             >
                 {generateSquares()}
             </div>
-
         </>
     )
 }
