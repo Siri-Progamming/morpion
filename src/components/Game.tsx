@@ -24,8 +24,20 @@ function Game() {
         }
     }, [])
 
+    const handleBoardUpdate = (e) => {
+        console.log('HandlingBoardUpdate')
+        console.log('isFirst ? : '+gameState.isFirst)
+        setGameState({
+            symbol: e.symbol,
+            initialValue: '',
+            isFirst: false
+        })
+        console.log('isFirst ? : '+gameState.isFirst)
+    }
+
     return (
-        <Board symbol={gameState.symbol} initialValue={gameState.initialValue} isFirst={gameState.isFirst}/>
+        <Board symbol={gameState.symbol} initialValue={gameState.initialValue} isFirst={gameState.isFirst}
+                onBoardUpdate={handleBoardUpdate}/>
     )
 }
 
