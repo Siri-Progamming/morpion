@@ -7,6 +7,7 @@ function Board(props) {
     const initialValue = props.initialValue
 
     const [squares, setSquares] = useState(Array(9).fill(initialValue))
+    const [squaresHistory, setSquaresHistory] = useState([squares])
 
     const generateSquares = () => {
         return squares.map((value, index) => (
@@ -27,6 +28,8 @@ function Board(props) {
     const handleClickOnSquare = (e) => {
         // On met à jour les squares
         squares[e.id] = e.playedSymbol
+        // On ajoute l'était de la grille dans l'historique
+        setSquaresHistory([...squaresHistory, squares])
         // On check s'il y a un gagnant
         if(checkWinner(squares) != null){
             onBoardUpdate({winner: checkWinner(squares)})
@@ -65,6 +68,9 @@ function Board(props) {
                             gap-4"
             >
                 {generateSquares()}
+            </div>
+            {/* TODO: Afficher l'historique des coups */}
+            <div>
             </div>
         </>
     )
