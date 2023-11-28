@@ -62,7 +62,7 @@ function Board(props) {
     return (
         <>
             <div className="grid grid-cols-3
-                            gap-0"
+                            gap-4"
             >
                 {generateSquares()}
             </div>
