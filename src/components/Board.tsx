@@ -2,11 +2,10 @@ import Square from './Square.tsx'
 import { useEffect, useState } from 'react'
 
 function Board (props) {
-  const { onBoardUpdate } = props
+  const { boardSendingWinner, oneMoreTime} = props
   const [playingSymbol, setPlayingSymbol] = useState(props.playingSymbol)
   const [squares, setSquares] = useState(initSquares())
   const [squaresHistory, setSquaresHistory] = useState(squares)
-  const [existWinner, setExistWinner] = useState(false)
 
   const generateSquares = () => {
     console.log('Generating squares')
@@ -23,28 +22,34 @@ function Board (props) {
     console.log('Initialising Squares')
     return Array(9).fill('')
   }
+
   useEffect(() => {
     console.log('Premier à commencer : ', playingSymbol)
-    setSquares(squares)
-    // On ajoute l'était de la grille dans l'historique
-    setSquaresHistory([...squaresHistory, squares])
-    console.log("Nombre de coups : "+squaresHistory.length)
-    if (existWinner, squares) {
-      setExistWinner(false)
-      setSquares(squaresHistory[0])
+    return () => {
+
+    };
+  }, []);
+
+  useEffect(() => {
+    if (oneMoreTime) {
+      console.log('Resetting Board')
+      setSquares(Array(9).fill(''))
     }
-  }, [squares, existWinner])
+  }, [oneMoreTime])
 
   const handleClickOnSquare = (e) => {
     // On met à jour les squares
     squares[e.id] = e.playedSymbol
+  // On ajoute l'était de la grille dans l'historique
+  setSquaresHistory(prevSquaresHistory =>[...squaresHistory, squares[e.id]])
+  console.log("Nombre de coups : "+squaresHistory.length)
     // On check s'il y a un gagnant
     if (checkWinner(squares) != null) {
-      onBoardUpdate({ winner: checkWinner(squares) })
-      setExistWinner(true)
+      boardSendingWinner({ winner: checkWinner(squares) })
     }
     // On met à jour le symbole qui doit jouer
     setPlayingSymbol(e.playingSymbol)
+    setSquares(squares)
   }
 
   function checkWinner (squares) {

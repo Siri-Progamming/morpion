@@ -34,7 +34,7 @@ function Square(props) {
             onClick={() => {
                 handleClick()
             }}
-        ></div>
+        >{squareSymbol}</div>
     )
 }
 
