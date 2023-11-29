@@ -45,6 +45,7 @@ function Game() {
             <Board playingSymbol={gameState.playingSymbol}
                    initialValue={gameState.initialValue}
                    onBoardUpdate={handleBoardUpdate}/>
+
         </>
     )
 }
